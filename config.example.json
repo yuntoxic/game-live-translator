@@ -1,0 +1,118 @@
+{
+  "source": {
+    "window_title": "Projector",
+    "window_hwnd": null,
+    "max_fps": 20
+  },
+  "regions": [
+    {
+      "name": "subtitle",
+      "role": "dialogue",
+      "lang": "ja",
+      "translate": true,
+      "box": [
+        0.1,
+        0.76,
+        0.9,
+        0.96
+      ]
+    },
+    {
+      "name": "speaker",
+      "role": "name",
+      "lang": "ja",
+      "translate": false,
+      "box": [
+        0.1,
+        0.69,
+        0.32,
+        0.76
+      ],
+      "trigger": {
+        "stable_ms": 150
+      }
+    }
+  ],
+  "trigger": {
+    "motion_threshold": 0.004,
+    "stable_ms": 260,
+    "min_interval_ms": 150,
+    "max_hold_ms": 2500,
+    "blank_edge_ratio": 0.004,
+    "rearm_threshold": 0.003
+  },
+  "ocr": {
+    "engine": "windows",
+    "upscale": 2.0,
+    "contrast": 1.0,
+    "binarize": false,
+    "invert": false,
+    "min_chars": 2,
+    "drop_regex": "",
+    "coalesce_ms": 250
+  },
+  "translate": {
+    "backend": "google",
+    "target_lang": "zh-CN",
+    "source_lang": "auto",
+    "context_lines": 4,
+    "cache_size": 2000,
+    "timeout_s": 8.0,
+    "//vision": "true = send the region's pixels to the model along with the local OCR read, so it corrects misread characters against the picture. Dialogue sends its crop; menus and stat panels send the whole region with each line's box drawn on it under a number, and the per-line caption positions still come from local OCR. Costs about a second more latency and image tokens per NEW line -- repeats are cached by the OCR text and cost nothing. Needs a model and endpoint that accept images.",
+    "vision": false,
+    "//role_models": "Model per region role, overriding the backend's own model; only the name changes, so address, key and limits stay as they are. A menu is the bulk of the traffic and wants a short noun in the conventional game term, while dialogue is the minority and wants context, register and a model willing to translate what the game says -- so pay for the strong model only where it earns its latency. Keys are region roles: dialogue, name, choice, info. Empty (the default) sends everything to the backend's model. The cache is shared across roles: the same line is never paid for twice because two roles happen to contain it.",
+    "role_models": {},
+    "//fixes": "Output-side replacements, applied to the translation just before it is shown: for a word the model keeps getting wrong no matter how it is prompted, write {\"wrong\": \"right\"}. The glossary corrects the source side and needs the term recognised; this needs nothing. fixes_file works like glossary_file (one path or a list, later files win, inline entries win over all).",
+    "fixes": {},
+    "//glossary": "Terms this game renders a particular way. Only entries that appear in the current text are sent to the model, so this can grow as long as you like. Add character names here to stop them drifting between spellings.",
+    "glossary": {},
+    "openai": {
+      "base_url": "https://api.openai.com/v1",
+      "api_key_env": "OPENAI_API_KEY",
+      "api_key": "",
+      "model": "gpt-5.6-terra",
+      "//fallback_model": "Tried once, only when the main model declines a line (refuses, or answers about it instead of translating). Models differ sharply on content they treat as sensitive; a fast primary plus a willing fallback pays the slower model's latency only on the lines that need it.",
+      "fallback_model": "",
+      "max_tokens": 512
+    },
+    "anthropic": {
+      "base_url": "https://api.anthropic.com/v1",
+      "api_key_env": "ANTHROPIC_API_KEY",
+      "api_key": "",
+      "//thinking": "Real-time subtitles gain nothing from thinking, so the backend sends {type: disabled}. Set \"thinking\" to anything other than \"disabled\" to let the model decide instead.",
+      "model": "claude-haiku-4-5",
+      "max_tokens": 512
+    },
+    "deepl": {
+      "api_key_env": "DEEPL_API_KEY",
+      "api_key": "",
+      "free_tier": true
+    },
+    "//glossary_file": "A list stacks, later files winning. Leave the common one first: it holds the terms every Japanese game words the same way, which are exactly the ones a generic engine gets wrong (装備 as 设备, ステータス as 地位). Add a file of your own for whatever your game words differently.",
+    "glossary_file": [
+      "glossaries/common-ja-zh.json",
+      "glossaries/darksouls3-ja-zh.json"
+    ]
+  },
+  "overlay": {
+    "enabled": true,
+    "mode": "inplace",
+    "placement": "over",
+    "label_style": "seamless",
+    "x": 120,
+    "y": 820,
+    "width": 900,
+    "font_family": "Microsoft YaHei UI",
+    "font_size": 24,
+    "src_font_size": 13,
+    "show_source": true,
+    "opacity": 0.88,
+    "bg": "#0b0e14",
+    "fg": "#f5f5f2",
+    "src_fg": "#8b93a5",
+    "name_fg": "#e8c07d",
+    "click_through": false,
+    "always_on_top": true
+  },
+  "log_file": "session.jsonl"
+}

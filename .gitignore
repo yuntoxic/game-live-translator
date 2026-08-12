@@ -1,0 +1,36 @@
+# Your own config may contain an inline API key - never commit it.
+config.json
+*.local.json
+
+# Session output
+session*.jsonl
+*.local.jsonl
+*.log
+frame.png
+probe_*.png
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+build/
+dist/
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+# Benchmark reports quote the endpoint they were run against.
+bench-*.txt
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+运行日志.txt

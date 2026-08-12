@@ -1,0 +1,12 @@
+# cmd.exe requires CRLF in batch files. With LF-only endings it mis-parses
+# blocks and the launcher silently does nothing when double-clicked, so this
+# must survive checkout on every machine.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+*.py   text
+*.md   text
+*.json text
+*.txt  text
+
+*.png binary
